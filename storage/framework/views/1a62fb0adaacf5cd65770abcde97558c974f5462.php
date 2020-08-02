@@ -1,190 +1,136 @@
-@extends('Layout.Panel')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div class="container-fluid">
-    @include('Includes.Panel.moviesmenu')
+    <?php echo $__env->make('Includes.Panel.moviesmenu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="card">
         <div class="card-body">
-          
-            <form id="upload-movie" method="post" @isset($post) action="{{route('Panel.EditMovie',$post)}}" @else
-                action="{{route('Panel.AddMovie')}}" @endisset enctype="multipart/form-data">
-                @csrf
-                 <div class="card-title d-flex justify-content-between">
+
+            <form id="upload-music" method="post" <?php if(isset($post)): ?> action="<?php echo e(route('Panel.EditMusic',$post)); ?>" <?php else: ?>
+                action="<?php echo e(route('Panel.AddMusic')); ?>" <?php endif; ?> enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
+                <div class="card-title d-flex justify-content-between">
                     <h5 class="text-center">
-                        @isset($post)
-                        ویرایش فایل
-                        @else
-                        افزودن فایل
-                        @endisset
+                        <?php if(isset($post)): ?>
+                        Edit Music
+                        <?php else: ?>
+                        Add Music
+                        <?php endif; ?>
 
 
                     </h5>
 
                     <button type="submit" class="btn btn-primary">
-                        @isset($post)
+                        <?php if(isset($post)): ?>
                         ویرایش
-                        @else
+                        <?php else: ?>
                         ذخیره
-                        @endisset
+                        <?php endif; ?>
                     </button>
 
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-md-8">
-                        @if (!isset($post))
-                        <div class="row">
-                            <div class="col-md-4 ">
-                                <div class="form-group ">
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" name="checkImdb"
-                                            id="checkImdb">
-                                        <label class="custom-control-label" for="checkImdb">وارد کردن کد imdb</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 row add-code" style="display: none">
-                                <input type="text" name="code" id="code" class="form-control col-md-4 mt-2">
-                                <div class="wrapper--btn col-md-6">
-                                    <a href="#" onclick="getCode(event)" class="btn btn-primary my-2">جست و جو &nbsp;<i
-                                            class="fas fa-search"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <label for="">عنوان فیلم: </label>
+                                <label for="">Title: </label>
                                 <input type="text" class="form-control" name="title" id="title"
-                                    value="{{$post->title ?? ''}}">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label for="">عنوان اصلی: </label>
-                                <input type="text" class="form-control" name="name" id="original-title"
-                            value="{{$post->name ?? ''}}" onblur="checkName(event,'{{route('Panel.checkNameAjax')}}')">
-                            <span class="error-name text-danger"></span>
-                        </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="">مدت زمان برحسب دقیقه</label>
-                                <input type="number" class="form-control" name="duration" id="runtime"
-                                    value="{{$post->duration ?? ''}}">
+                                    value="<?php echo e($post->title ?? ''); ?>">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="">تاریخ انتشار</label>
+                                <label for="">Singer: </label>
+                                <input type="text" class="form-control" name="actor" id="actor"
+                                    value="<?php echo e($post->title ?? ''); ?>">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Released: </label>
                                 <input type="text" class="form-control  datepicker" name="released" id="released"
-                                    @isset($post) value="{{\Carbon\Carbon::parse($post->released)->format('d F Y')}}"
-                                    @endisset>
-                                <input type="text" class="form-control " name="imdb_released" id="imdb-released"
-                                    value="">
+                                    <?php if(isset($post)): ?> value="<?php echo e(\Carbon\Carbon::parse($post->released)->format('d F Y')); ?>"
+                                    <?php endif; ?>>
+
                             </div>
                         </div>
                         <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="">Lyric By: </label>
+                                <input type="text" class="form-control" name="lyric" id="lyric"
+                                    value="<?php echo e($post->lyric ?? ''); ?>">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Arrangement By: </label>
+                                <input type="text" class="form-control" name="arrangment" id="arrangment"
+                                    value="<?php echo e($post->arrangment ?? ''); ?>">
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
                             <div class="form-group col-md-12">
-                                <label for="desc">توضیحات : </label>
+                                <label for="desc">Translation: </label>
                                 <textarea class="form-control" name="desc" id="desc" cols="30"
-                                    rows="8">{{$post->description ?? ''}}</textarea>
+                                    rows="8"><?php echo e($post->description ?? ''); ?></textarea>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label for="short_desc">توضیحات کوتاه: </label>
-                                <textarea class="form-control" name="short_desc" id="short_desc" cols="30"
-                                    rows="8">{{$post->short_description ?? ''}}</textarea>
-                            </div>
-                        </div>
-                        <div class="row">
+
+                        <div class="row my-3">
                             <div class="form-group col-md-12">
                                 <div class="form-row">
                                     <div class="col-md-3">
-                                        <label for=""> پوستر فیلم: </label>
+                                        <label for=""> Poster: </label>
                                     </div>
                                     <div class="col-md-9">
-                                        <img alt="" id="preview" width="100%" style="max-height: 400px" src="@isset($post)
-                                             {{asset($post->poster)}} 
-                                                @else
-                                                 {{asset('assets/images/640x360.png')}} 
-                                            @endisset">
+                                        <img alt="" id="preview" width="100%" style="max-height: 400px" src="<?php if(isset($post)): ?>
+                                             <?php echo e(asset($post->poster)); ?> 
+                                                <?php else: ?>
+                                                 <?php echo e(asset('assets/images/640x360.png')); ?> 
+                                            <?php endif; ?>">
                                         <input type="file" name="poster" id="poster" />
-                                        <div style="display: none;">
-                                            <input type="hidden" name="imdbposter" id="imdbposter" value="">
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-md-12">
-                            <label for="">آدرس تریلر: </label>
-                            <input type="text" class="form-control" name="trailer" id="trailer" @if(isset($post) &&
-                                $post->trailer)
-                            value="{{asset($post->trailer->url)}}"
-                            @endif >
-                        </div>
-                        <label for="desc">تصاویر: </label>
-                        <div class="row images mb-3">
 
-                            @isset($post)
-                            @foreach ($post->images as $item)
-                            <div class=" col-md-3">
-                                <a style="cursor:pointer;color:red" onclick="deleteImage(event)"><i
-                                        class="fas fa-trash"></i></a>
-                                <img width="100%" src="{{asset($item->url)}}" alt="">
-                                    <input type="hidden" name="imdbImages[]" value="{{$item->url}}">  
-                            </div>
-                            @endforeach
-                            @endisset
-                        </div>
-                        <span style="cursor: pointer;" href="" onclick="getClone(this)"><i class="fa fa-plus"></i>
-                            افزودن </span>
-                        <div class="row">
-                            <div class=" col-md-3 image-box">
-                                <div class="form-group">
-                                    <input type="file" name="images[]" class="dropify" data-max-file-size="300K"
-                                        data-allowed-file-extensions="png jpg jpeg" data-default-file="" />
-                                </div>
-                            </div>
-                        </div>
-                        @include('Includes.Panel.Video')
+
+
+
                     </div>
-                    @include('Includes.Panel.sidemovie')
+                   <?php echo $__env->make('Includes.Panel.SideForm', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                 </div>
+                <?php echo $__env->make('Includes.Panel.Music', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a class="btn btn-outline-primary" href="<?php echo e(route('Panel.MusicList')); ?>">Back &nbsp;<i
+                                class="fas fa-arrow-circle-right"></i></a>
+                        <button type="submit" class="btn btn-primary"> <?php if(isset($post)): ?>
+                            Edit
+                            <?php else: ?>
+                            Save
+                            <?php endif; ?>
+
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <hr>
         </div>
-        <input type="hidden" name="imdbID" id="imdbID">
-        <input type="hidden" name="imdbVotes" id="imdbVotes">
-        <input type="hidden" name="imdbRating" id="imdbRating">
-        <div class="row">
-            <div class="col-md-12 text-center">
-            <a class="btn btn-outline-primary" href="{{route('Panel.MoviesList')}}">بازگشت &nbsp;<i class="fas fa-arrow-circle-right"></i></a>
-                <button type="submit" class="btn btn-primary">  @isset($post)
-                    ویرایش
-                    @else
-                    ذخیره
-                    @endisset
- 
-                </button>
-            </div>
-        </div>
-        </form>
-        <hr>
     </div>
-</div>
 
-@endsection
+    <?php $__env->stopSection(); ?>
 
-@section('css')
-<link rel="stylesheet" href="{{asset('assets/vendors/datepicker/bootstrap-datepicker.min.css')}}">
-@endsection
-@section('js')
-<script src="{{asset('assets/vendors/datepicker/bootstrap-datepicker.min.js')}}"></script>
-<script src="{{asset('assets/vendors/ckeditor/ckeditor.js')}}"></script>
-<script>
-    $('#imdb-released').hide()
+    <?php $__env->startSection('css'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('assets/vendors/datepicker/bootstrap-datepicker.min.css')); ?>">
+    <?php $__env->stopSection(); ?>
+    <?php $__env->startSection('js'); ?>
+    <script src="<?php echo e(asset('assets/vendors/datepicker/bootstrap-datepicker.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('assets/vendors/ckeditor/ckeditor.js')); ?>"></script>
+    <script>
+        $('#imdb-released').hide()
     $('#checkImdb').change(function(){
         if($(this).is(':checked')){
             $('.add-code').css('display','flex')
@@ -202,8 +148,8 @@
 
     CKEDITOR.replace('desc',{
             contentsLangDirection: 'rtl',
-            filebrowserUploadUrl: '{{route('UploadImage')}}?type=file',
-            imageUploadUrl: '{{route('UploadImage')}}?type=image',
+            filebrowserUploadUrl: '<?php echo e(route('UploadImage')); ?>?type=file',
+            imageUploadUrl: '<?php echo e(route('UploadImage')); ?>?type=image',
         });
         
                  array  =[];
@@ -217,8 +163,8 @@
           let val = $(event.target).val()
           if(val.length > 3) {
             
-               data = { val:val,_token: "{{ csrf_token() }}" };
-            url='{{route('Panel.Ajax.GetActor')}}';
+               data = { val:val,_token: "<?php echo e(csrf_token()); ?>" };
+            url='<?php echo e(route('Panel.Ajax.GetActor')); ?>';
             request = $.post(url, data);
             request.done(function(res){
                 el.next().show()
@@ -234,8 +180,8 @@
           let val = $(event.target).val()
           if(val.length > 3) {
             
-               data = { val:val,_token: "{{ csrf_token() }}" };
-            url='{{route('Panel.Ajax.GetDirector')}}';
+               data = { val:val,_token: "<?php echo e(csrf_token()); ?>" };
+            url='<?php echo e(route('Panel.Ajax.GetDirector')); ?>';
             request = $.post(url, data);
             request.done(function(res){
                 el.next().show()
@@ -256,8 +202,8 @@
                     <span class="spinner-grow spinner-grow-sm m-l-5" role="status" aria-hidden="true"></span>
                     در حال دریافت اطلاعات ...
                 </button>`)   
-            data = { code:code,_token: "{{ csrf_token() }}" };
-            url='{{route('Panel.GetImdb')}}';
+            data = { code:code,_token: "<?php echo e(csrf_token()); ?>" };
+            url='<?php echo e(route('Panel.GetImdb')); ?>';
             request = $.post(url, data);
             request.done(function(res){
                 if(res.error){
@@ -378,8 +324,8 @@ function deleteVideo(event , videoId) {
     event.preventDefault()
     
     var el = $(event.target);
-     data = { id:videoId,_method:'delete',_token: "{{ csrf_token() }}" };
-            url="{{route('Panel.DeleteVideo')}}";
+     data = { id:videoId,_method:'delete',_token: "<?php echo e(csrf_token()); ?>" };
+            url="<?php echo e(route('Panel.DeleteVideo')); ?>";
             request = $.post(url, data);
             request.done(function(res){
                 if($('.upload-season-file').length == 1) {
@@ -403,5 +349,6 @@ function deleteVideo(event , videoId) {
               
  $(".dropify").dropify();
            
-</script>
-@endsection
+    </script>
+    <?php $__env->stopSection(); ?>
+<?php echo $__env->make('Layout.Panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\radio\resources\views/Panel/Music/add.blade.php ENDPATH**/ ?>

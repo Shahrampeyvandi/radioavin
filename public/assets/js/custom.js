@@ -213,15 +213,15 @@
             desc: "توضیحات برای فایل الزامی است",
             release: "تاریخ پخش را انتخاب کنید",
 
-            "file[1][1]": {
-                required: "آدرس ویدیو را وارد نمایید",
-                regex: "آدرس وارد شده نامعتبر میباشد",
+            file: {
+                required: true,
+              
             },
         },
     });
 
 
-    $("#upload-movie").validate({
+    $("#upload-music").validate({
         rules: {
             title: {
                 required: true,
@@ -229,30 +229,17 @@
             name: {
                 required: true,
             },
-            duration: {
-                required: true,
-                number: true,
-            },
-            serie: "required",
-            type: "required",
+
             poster: {
+                
                 filesize: 200 * 1024,
                 accept: "jpg|jpeg|png|JPG|JPEG|PNG",
             },
             released: "required",
             desc: "required",
             "categories[]": "required",
-            "actors[]": "required",
-            "writers[]": "required",
-            "directors[]": "required",
-            "languages[]": "required",
-
-            trailer: {
-                regex: /^https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}$/,
-            },
-            "file[1][1]": {
+            file: {
                 required: true,
-                regex: /^https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}$/,
             },
         },
         messages: {
@@ -260,36 +247,15 @@
                 required: "لطفا عنوان فایل را وارد نمایید",
                 maxlength: "تعداد کاراکترها بیش از حد مجاز میباشد",
             },
-            name: {
-                required: "لطفا نام فایل را وارد نمایید",
-                maxlength: "تعداد کاراکترها بیش از حد مجاز میباشد",
-            },
-            serie: "سریال را انتخاب نمایید",
-            type: "محتوای فایل را انتخاب کنید",
-            trailer: {
-                regex: "آدرس دارای فرمت نامعتبر میباشد",
-            },
-            duration: {
-                required: "مدت زمان فیلم را وارد نمایید",
-                number: "تنها شامل عدد میباشد",
-            },
+
             released: "تاریخ انتشار را وارد نمایید",
             desc: "توضیحات برای فایل الزامی است",
             "categories[]": "وارد کردن دسته بندی الزامی است",
-            "actors[]": "لطفا اسامی بازیگران را وارد نمایید",
-            "writers[]": "لطفا نام نویسنده را وارد نمایید",
-            "directors[]": "لطفا نام کارگردان را وارد نمایید",
-            "file[1][1]": {
-                required: "آدرس ویدیو را وارد نمایید",
-                regex: "آدرس وارد شده نامعتبر میباشد",
+
+           
+            file: {
+                required: "لطفا فایل آهنگ را آپلود کنید",
             },
-            trailer: {
-                regex: "آدرس وارد شده نامعتبر میباشد",
-            },
-            "languages[]": "لطفا زبان فیلم را وارد نمایید",
-            season: "شماره فصل سریال را وارد نمایید",
-            section: "شماره قسمت سریال را وارد نمایید",
-            year: "سال ساخت فیلم را وارد نمایید",
         },
     });
 
@@ -415,21 +381,21 @@ function addFile(event, el) {
 function addCategory(event, url) {
     event.preventDefault();
     var el = $(event.target);
-    let latin = $(event.target).prev().find('#prev').val();
+   
     let name = $(event.target).prev().find("#pprev").val();
     var token = $('meta[name="_token"]').attr("content");
     // data = ;
 
-  var  request = $.post(url, { name: name, latin: latin, _token: token });
+  var  request = $.post(url, { name: name, _token: token });
     request.done(function (res) {
 
-        if (latin !== "" && name !== "") {
+        if (name !== "") {
             let id = Math.random();
-            let wrapper = el.parent().parent().next();
+            let wrapper = $(".cat-wrapper");
             wrapper.prepend(`
          <div class="custom-control custom-checkbox custom-control-inline">
                                 <input type="checkbox" id="${id}" name="categories[]"
-                                  value="${latin}"
+                                  value="${name}"
                                     class="custom-control-input" checked>
                                 <label class="custom-control-label" for="${id}">${name}</label>
                             </div>
@@ -438,136 +404,51 @@ function addCategory(event, url) {
     })
 }
 
-function addBCategory(event) {
-    let val = $(event.target).prev().val();
-    if (val !== "") {
-        let id = Math.random();
-        let wrapper = $(event.target).next();
-        wrapper.append(`
-         <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="${id}" name="category"
-                                  value="${val}"
-                                    class="custom-control-input" checked>
-                                <label class="custom-control-label" for="${id}">${val}</label>
-                            </div>
-         `);
-    }
-}
-
 function addTag(event) {
     event.preventDefault();
-    let val = $(event.target).prev().val();
+    let val = $(event.target).prev().find('#tag').val();
     if (val !== "") {
         let id = Math.random();
-        let wrapper = $(event.target).next();
+        let wrapper = $('.tag-wrapper');
         wrapper.append(`
          <div class="custom-control custom-checkbox custom-control-inline">
-                                <input type="checkbox" id="${id}" name="tag[]"
+                                <input type="checkbox" id="tag-${id}" name="tags[]"
                                  value="${val}"
                                     class="custom-control-input" checked>
-                                <label class="custom-control-label" for="${id}">${val}</label>
+                                <label class="custom-control-label" for="tag-${id}">${val}</label>
                             </div>
          `);
     }
 }
 
-function addDirector(event) {
+function addLyric(event) {
     event.preventDefault();
-    let val = $(event.target).siblings(".form-control").val();
+    let val = $(event.target).prev().find('#lyric').val();
     if (val !== "") {
         let id = Math.random();
-        let wrapper = $(event.target).next();
-        wrapper.prepend(`
-         <div class="custom-control custom-checkbox custom-control-inline">
-                                <input type="checkbox" id="dir-${id}" name="directors[]"
-                                 value="${val}"
-                                    class="custom-control-input" checked>
-                                <label class="custom-control-label" for="dir-${id}">${val}</label>
-                            </div>
-         `);
-    }
-}
-
-function addActor(event) {
-    event.preventDefault();
-    let val = $(event.target).siblings(".form-control").val();
-    if (val !== "") {
-        let id = Math.random();
-        let wrapper = $(event.target).next();
-        wrapper.prepend(`
-         <div class="custom-control custom-checkbox custom-control-inline">
-                                <input type="checkbox" id="act-${id}" name="actors[]"
-                                 value="${val}"
-                                    class="custom-control-input" checked>
-                                <label class="custom-control-label" for="act-${id}">${val}</label>
-                            </div>
-         `);
-    }
-}
-
-function addWriter(event) {
-    event.preventDefault();
-    let val = $(event.target).prev().val();
-    if (val !== "") {
-        let id = Math.random();
-        let wrapper = $(event.target).next();
-        wrapper.prepend(`
-         <div class="custom-control custom-checkbox custom-control-inline">
-                                <input type="checkbox" id="${id}" name="writers[]"
-                                 value="${val}"
-                                    class="custom-control-input" checked>
-                                <label class="custom-control-label" for="${id}">${val}</label>
-                            </div>
-         `);
-    }
-}
-
-function addLanguage(event) {
-    event.preventDefault();
-    let val = $(event.target).prev().val();
-    if (val !== "") {
-        let id = Math.random();
-        let wrapper = $(event.target).next();
+        let wrapper = $('.lyric-wrapper');
         wrapper.append(`
          <div class="custom-control custom-checkbox custom-control-inline">
-                                <input type="checkbox" id="lang-${id}" name="languages[]"
+                                <input type="checkbox" id="lyric-${id}" name="lyrics[]"
                                  value="${val}"
                                     class="custom-control-input" checked>
-                                <label class="custom-control-label" for="lang-${id}">${val}</label>
+                                <label class="custom-control-label" for="lyric-${id}">${val}</label>
                             </div>
          `);
     }
 }
-
-function addSeason(event) {
+function addArrangement(event) {
     event.preventDefault();
-    let val = $(event.target).prev().val();
+    let val = $(event.target).prev().find("#arrangement").val();
     if (val !== "") {
         let id = Math.random();
-        let wrapper = $(event.target).next();
+        let wrapper = $(".arrangement-wrapper");
         wrapper.append(`
-         <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="${id}" name="season[]"
+         <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" id="arrangement-${id}" name="arrangements[]"
                                  value="${val}"
-                                    class="custom-control-input" >
-                                <label class="custom-control-label" for="${id}">${val}</label>
-                            </div>
-         `);
-    }
-}
-
-function addSection(event) {
-    event.preventDefault();
-    let val = $(event.target).prev().val();
-    if (val !== "") {
-        let id = Math.random();
-        let wrapper = $(event.target).next();
-        wrapper.append(`
-         <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="${id}" name="section[]"
-                                 value="${val}"
-                                    class="custom-control-input" >
-                                <label class="custom-control-label" for="${id}">${val}</label>
+                                    class="custom-control-input" checked>
+                                <label class="custom-control-label" for="arrangement-${id}">${val}</label>
                             </div>
          `);
     }

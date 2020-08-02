@@ -14,6 +14,8 @@ class UserController extends Controller
 
         return view('Panel.Users.Lists', compact('users'));
     }
+
+
     public function Delete(Request $request)
     {
         $user = User::find($request->id);
@@ -21,6 +23,8 @@ class UserController extends Controller
         return response()->json('کاربر با موفقیت حذف شد');
     }
 
+
+    
     public function Add(Request $request)
     {
         $user = new User;

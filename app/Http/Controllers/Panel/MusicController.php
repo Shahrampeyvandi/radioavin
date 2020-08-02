@@ -6,7 +6,7 @@ use Goutte;
 use App\Post;
 use App\Actor;
 use App\Image;
-use App\Video;
+use App\File as Fil;
 use App\Writer;
 use App\Episode;
 use App\Quality;
@@ -19,20 +19,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
+use App\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 
-class MoviesController extends Controller
+class MusicController extends Controller
 {
 
-    function MoviesList(Request $request)
+    function MusicList(Request $request)
     {
 
-        $movies = Post::where('type', 'movies')->latest()->get();
+        $music = Post::where('type', 'music')->latest()->get();
 
 
-        return view('Panel.Movies.List', compact(['movies']));
+        return view('Panel.Music.List', compact(['music']));
     }
 
 
@@ -41,13 +42,7 @@ class MoviesController extends Controller
     {
 
 
-     
-        $actors = Actor::all();
-        $writers = Writer::all();
-        $directors = Director::all();
-        $languages = Language::all();
-
-        return view('Panel.Movies.add', compact(['writers', 'directors', 'actors', 'languages']));
+        return view('Panel.Music.add');
     }
 
 
@@ -55,26 +50,21 @@ class MoviesController extends Controller
     public function Save(Request $request)
     {
 
-
-        
-
-        // dd($request->all());
-        $slug = Str::slug($request->name);
-        $destinationPath = "files/movies/$slug";
+        dd($request->all());
+        $slug = Str::slug($request->title);
+        $destinationPath = "musics/$slug";
         if (!File::exists($destinationPath)) {
 
             File::makeDirectory($destinationPath, 0777, true);
         }
+
         $post = new Post;
         $post->post_author = Auth::guard('admin')->user()->id;
         $post->title = $request->title;
-        $post->name = $request->name;
-        $post->type = 'movies';
+
+
         $post->description = $request->desc;
-        $post->short_description = $request->short_desc;
-        $post->imdbID = $request->imdbID;
-        $post->imdbRating = $request->imdbRating;
-        $post->imdbVotes = $request->imdbVotes;
+
 
         if ($request->hasFile('poster')) {
             $picextension = $request->file('poster')->getClientOriginalExtension();
@@ -82,134 +72,59 @@ class MoviesController extends Controller
             $request->file('poster')->move(public_path($destinationPath), $fileName);
             $Poster = "$destinationPath/$fileName";
         } else {
-            if (isset($request->imdbposter) && $request->imdbposter) {
-                $img = $destinationPath . '/poster_' . basename($request->imdbposter);
-                file_put_contents($img, file_get_contents($request->imdbposter));
-                $Poster = $img;
-            } else {
-                $Poster = '';
-            }
+            $Poster = '';
         }
         $post->released = Carbon::parse($request->released)->toDateTimeString();
-
         $post->poster = $Poster;
-        $post->duration = $request->duration;
-        $post->age_rate = $request->age_rate;
-        $post->awards = $request->awards;
-        $post->comment_status = isset($request->commentstatus) && $request->commentstatus == '1' ? 'enable' : 'disable';
+       
 
         if ($post->save()) {
-
-            if ($request->has('checkImdb') && $request->checkImdb == "on") {
-
-                if ($request->has('images')) {
-                    if (!File::exists($destinationPath . "/images")) {
-                        File::makeDirectory($destinationPath . "/images", 0777, true);
-                    }
-                    foreach ($request->images as $key => $image) {
-                        $img = $destinationPath . "/images/" . basename($image);
-                        file_put_contents($img, file_get_contents($image));
-                        $post->images()->create([
-                            'url' => $img,
-                        ]);
-                    }
-                }
-            } else {
-
-                if ($request->has('images')) {
-                    if (!File::exists($destinationPath . "/images")) {
-                        File::makeDirectory($destinationPath . "/images", 0777, true);
-                    }
-                    foreach ($request->images as $key => $image) {
-
-                        $picextension = $image->getClientOriginalExtension();
-                        $fileName = 'image_' . date("Y-m-d") . '_' . time() . $key . '.' . $picextension;
-                        $image->move($destinationPath . "/images/", $fileName);
-                        $imageUrl = "$destinationPath/images/$fileName";
-                        $post->images()->create([
-                            'url' => $imageUrl,
-                        ]);
-                    }
-                }
-            }
-
-            if (isset($request->trailer)) {
-                $post->trailer()->create([
-                    'name' => $post->name,
-                    'poster' => '',
-                    'url' => $request->trailer
-                ]);
-            }
-
             foreach ($request->categories as $key => $category) {
                 if ($id = Category::check($category)) {
                     $post->categories()->attach($id);
-                } 
-            }
-
-
-            foreach ($request->actors as $key => $actor) {
-                if ($id = Actor::check($actor)) {
-                    $post->actors()->attach($id);
-                } else {
-
-                    $post->actors()->create(['name' => $actor]);
                 }
             }
 
-            foreach ($request->directors as $key => $director) {
-                if ($id = Director::check($director)) {
-                    $post->directors()->attach($id);
-                } else {
-
-                    $post->directors()->create(['name' => $director]);
+                foreach ($request->tags as $key => $tag) {
+                if ($id = Tag::check($tag)) {
+                    $post->tags()->attach($id);
                 }
+
+        
+            }
+            if ($request->file) {
+                $filePath = "music";
+                if (!File::exists($filePath)) {
+
+                    File::makeDirectory($filePath, 0777, true);
+                }
+                $extension = $request->file('file')->getClientOriginalExtension();
+                $fileName = $slug . '_' . date("Y-m-d") . '_' . time() . '.' . $extension;
+                $request->file('file')->move($filePath, $fileName);
+                $filePathToSave = $filePath . "/" . $fileName;
+
+
+                $post->files()->create(['url'=>$filePathToSave,'type'=>'audio']);
+
+                // $fileNamevideo = $slug . '_' . date("Y-m-d") . '_' . time() . '.' . $extension;
+                // //$request->file('file')->move($filePath, $fileNamevideo);
+                // $filePath22 = "music/$fileNamevideo";
+
+                // // Storage::disk('ftp')->put($filePath22, fopen($request->file('file'), 'r+'));
+                // $conn = ftp_connect(env('FTP_HOST'));
+                // $login = ftp_login($conn, env('FTP_USERNAME'), env('FTP_PASSWORD'));
+                // ftp_set_option($conn, FTP_USEPASVADDRESS, false);
+                // ftp_pasv($conn, true);
+                // ftp_put($conn, $filePath22, $_FILES['file']['tmp_name'], FTP_BINARY);
+                // ftp_close($conn);
+                // $filePath = "files/posts/$request->title/$fileNamevideo";
             }
 
-            foreach ($request->writers as $key => $writer) {
-                if ($id = Writer::check($writer)) {
-                    $post->writers()->attach($id);
-                } else {
-
-                    $post->writers()->create(['name' => $writer]);
-                }
-            }
-
-            foreach ($request->languages as $key => $language) {
-                if ($id = Language::check($language)) {
-                    $post->languages()->attach($id);
-                } else {
-
-                    $post->languages()->create(['name' => $language]);
-                }
-            }
-
-
-
-
-            foreach ($request->file as $key => $file) {
-                if ($id = Quality::check($file[2])) {
-                    $quality_id = $id;
-                } else {
-                    $quality = Quality::create(['name' => $file[2]]);
-                    $quality_id = $quality->id;
-                }
-                $video = $post->videos()->create([
-                    'url' => $file[1],
-                    'quality_id' => $quality_id
-                ]);
-
-                foreach ($file[3] as $key => $caption) {
-                    if (array_key_exists(2, $caption)) {
-                        $video->captions()->create(['lang' => $caption[1], 'url' => $caption[2]]);
-                    }
-                }
-            }
+            toastr()->success('آهنگ با موفقیت اضافه شد');
+            return Redirect::route('Panel.MusicList', ['id' => $post->id]);
         } else {
             return back();
         }
-        toastr()->success('پست با موفقیت ثبت شد');
-        return Redirect::route('Panel.MoviesList', ['id' => $post->id]);
     }
 
     public function Edit(Post $post)
@@ -347,7 +262,7 @@ class MoviesController extends Controller
 
             if ($id = Category::check($category)) {
                 $post->categories()->attach($id);
-            }  
+            }
         }
 
 
@@ -495,19 +410,20 @@ class MoviesController extends Controller
 
         $cat = new Category;
         $cat->name = $request->name;
-        $cat->latin = ucwords(strtolower($request->latin));
         $cat->save();
 
-        return 'true';
+        return response()->json([
+            'id' => $cat->id,
+            'name' => $cat->name
+        ], 200);
     }
 
 
     public function checkNameAjax(Request $request)
     {
         // check in db
-        if(Post::where('name',$request->name)->count()){
-            return response()->json(['error'=>'این مورد از قبل ثبت شده است']
-        );
+        if (Post::where('name', $request->name)->count()) {
+            return response()->json(['error' => 'این مورد از قبل ثبت شده است']);
         }
     }
 }

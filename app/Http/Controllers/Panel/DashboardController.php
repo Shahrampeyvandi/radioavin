@@ -41,17 +41,13 @@ class DashboardController extends Controller
             foreach ($posts as $key => $post) {
                 $votes[$post->id] =  $post->votes()->count();
             }
-
             uasort($votes, function ($a, $b) {
                 if ($a == $b) {
                     return 0;
                 }
                 return ($a > $b) ? -1 : 1;
             });
-
-
             $largest = array_slice($votes, 0, 5, true);
-
             foreach ($largest as $key => $value) {
                 $post = Post::find($key);
                 $mostvotes[] = $value;
@@ -66,9 +62,7 @@ class DashboardController extends Controller
 
         $music = Post::where('type', 'music')->count();
         $video = Post::where('type', 'video')->count();
-   
         $users = User::count();
-
         return \view('Panel.Dashboard', compact([
             'music',
             'video',

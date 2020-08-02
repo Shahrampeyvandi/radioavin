@@ -5,12 +5,13 @@ namespace App;
 use CategoryVideo;
 use Illuminate\Database\Eloquent\Model;
 
-class Video extends Model
+class File extends Model
 {
+    protected $table = 'files';
     protected $guarded = ['id'];
-    protected $with = ['quality','captions'];
+    // protected $with = ['quality','captions'];
 
-    public function videoble()
+    public function fileble()
     {
         return $this->morphTo();
     }

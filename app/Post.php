@@ -17,22 +17,10 @@ class Post extends Model
         return $this->belongsToMany(Category::class, 'post_category', 'post_id', 'category_id');
     }
 
-     public function episodes()
+ 
+    public function files()
     {
-        return $this->hasMany(Episode::class);
-    }
-
-    public function seasons()
-    {
-        return $this->hasMany(Season::class);
-    }
-    public function awards()
-    {
-        return $this->hasMany(Award::class);
-    }
-    public function videos()
-    {
-        return $this->morphMany(Video::class, 'videoble');
+        return $this->morphMany(File::class, 'fileble');
     }
     // image and comment may be for videos or blogs
 
@@ -52,26 +40,15 @@ class Post extends Model
         return $this->morphMany(Vote::class, 'votable');
     }
 
-    public function actors()
+    public function lyrics()
     {
-        return $this->belongsToMany(Actor::class, 'post_actor', 'post_id', 'actor_id');
+        return $this->belongsToMany(Lyric::class, 'post_lyric', 'post_id', 'lyric_id');
     }
 
-    public function writers()
+    public function arrangements()
     {
-        return $this->belongsToMany(Writer::class, 'post_writer', 'post_id', 'writer_id');
+        return $this->belongsToMany(Arrangement::class, 'post_arrangement', 'post_id', 'arrangement_id');
     }
 
-    public function directors()
-    {
-        return $this->belongsToMany(Director::class, 'post_director', 'post_id', 'director_id');
-    }
-    public function languages()
-    {
-        return $this->belongsToMany(Language::class, 'post_language', 'post_id', 'language_id');
-    }
-    public function trailer()
-    {
-        return $this->hasOne(Trailer::class);
-    }
+    
 }

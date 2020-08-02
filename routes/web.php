@@ -15,9 +15,9 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
         return redirect()->route('Admin.Login');
     })->name('logout');
 
-    Route::get('movie/add', 'Panel\MoviesController@Add')->name('Panel.AddMovie');
-    Route::post('movie/add', 'Panel\MoviesController@Save')->name('Panel.AddMovie');
-    Route::put('movie/add', 'Panel\MoviesController@EditPost')->name('Panel.AddMovie');
+    Route::get('music/add', 'Panel\MusicController@Add')->name('Panel.AddMusic');
+    Route::post('music/add', 'Panel\MusicController@Save')->name('Panel.AddMusic');
+    Route::put('music/add', 'Panel\MusicController@EditPost')->name('Panel.AddMusic');
     Route::get('users', 'Panel\UserController@List')->name('Panel.UserList');
     Route::post('user/add', 'Panel\UserController@Add')->name('Panel.AddUser');
     Route::get('series/add', 'Panel\SeriesController@Add')->name('Panel.AddSerie');
@@ -25,7 +25,7 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
 
 
     Route::delete('user/delete', 'Panel\UserController@Delete')->name('Panel.DeleteUser');
-    Route::get('movies/list', 'Panel\MoviesController@MoviesList')->name('Panel.MoviesList');
+    Route::get('music/list', 'Panel\MusicController@MusicList')->name('Panel.MusicList');
     Route::get('series/list', 'Panel\SeriesController@SeriesList')->name('Panel.SeriesList');
 
     Route::get('series/{serie}/season/add', 'Panel\SeriesController@AddSeason')->name('Panel.AddSeason');
@@ -49,27 +49,27 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
 
 
 
-    Route::get('movie/{post}', 'Panel\MoviesController@Edit')->name('Panel.EditMovie');
-    Route::post('movie/{post}', 'Panel\MoviesController@EditMovie')->name('Panel.EditMovie');
+    Route::get('music/{post}', 'Panel\MusicController@Edit')->name('Panel.EditMusic');
+    Route::post('music/{post}', 'Panel\MusicController@EditMusic')->name('Panel.EditMusic');
 
     Route::get('serie/{post}', 'Panel\SeriesController@Edit')->name('Panel.EditSerie');
     Route::post('serie/{post}', 'Panel\SeriesController@EditSerie')->name('Panel.EditSerie');
 
 
     Route::post('actor/insert', 'Panel\ActorsController@Insert')->name('Panel.Actor.Insert');
-    Route::get('upload/video', 'Panel\MoviesController@UploadVideo')->name('Panel.UploadVideo');
-    Route::post('upload/video', 'Panel\MoviesController@SaveVideo')->name('Panel.UploadVideo');
-    Route::get('upload/episode', 'Panel\MoviesController@AddEpisode')->name('Panel.UploadEpisode');
-    Route::post('upload/episode', 'Panel\MoviesController@SaveEpisode')->name('Panel.UploadEpisode');
-    Route::delete('post/delete', 'Panel\MoviesController@DeletePost')->name('Panel.DeletePost');
-    Route::delete('video/delete', 'Panel\MoviesController@DeleteVideo')->name('Panel.DeleteVideo');
+    Route::get('upload/video', 'Panel\MusicController@UploadVideo')->name('Panel.UploadVideo');
+    Route::post('upload/video', 'Panel\MusicController@SaveVideo')->name('Panel.UploadVideo');
+    Route::get('upload/episode', 'Panel\MusicController@AddEpisode')->name('Panel.UploadEpisode');
+    Route::post('upload/episode', 'Panel\MusicController@SaveEpisode')->name('Panel.UploadEpisode');
+    Route::delete('post/delete', 'Panel\MusicController@DeletePost')->name('Panel.DeletePost');
+    Route::delete('video/delete', 'Panel\MusicController@DeleteVideo')->name('Panel.DeleteVideo');
     Route::get('plans/add', 'Panel\PlanController@Add')->name('Panel.AddPlan');
     Route::post('plans/add', 'Panel\PlanController@Save')->name('Panel.AddPlan');
     Route::get('plans/{id}/edit', 'Panel\PlanController@Edit')->name('Panel.EditPlan');
     Route::put('plans/{id}/edit', 'Panel\PlanController@SaveEdit')->name('Panel.EditPlan');
     Route::get('plans/list', 'Panel\PlanController@List')->name('Panel.PlanList');
     Route::delete('plans/delete', 'Panel\PlanController@Delete')->name('Panel.DeletePlan');
-    Route::delete('post/image/delete', 'Panel\MoviesController@DeleteImage')->name('Panel.DeleteImage');
+    Route::delete('post/image/delete', 'Panel\MusicController@DeleteImage')->name('Panel.DeleteImage');
     Route::get('discounts', 'Panel\DiscountController@List')->name('Panel.DiscountList');
     Route::post('discount/save', 'Panel\DiscountController@Save')->name('Panel.Discount.Insert');
     Route::get('discount/{id}/edit', 'Panel\DiscountController@Edit')->name('Panel.Discount.Edit');
@@ -92,8 +92,8 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
     Route::post('imdb/get', 'Panel\ImdbController@Get')->name('Panel.GetImdb');
     Route::post('ajax/actor/get', 'Panel\ActorsController@GetActorAjax')->name('Panel.Ajax.GetActor');
     Route::post('ajax/director/get', 'Panel\ActorsController@GetDirectorAjax')->name('Panel.Ajax.GetDirector');
-    Route::post('ajax/category', 'Panel\MoviesController@AddCatAjax')->name('Panel.AddCatAjax');
-    Route::post('ajax/checkname', 'Panel\MoviesController@checkNameAjax')->name('Panel.checkNameAjax');
+    Route::post('ajax/category', 'Panel\MusicController@AddCatAjax')->name('Panel.AddCatAjax');
+    Route::post('ajax/checkname', 'Panel\MusicController@checkNameAjax')->name('Panel.checkNameAjax');
 });
 
 

@@ -1,10 +1,8 @@
-@extends('Layout.Panel')
+<?php $__env->startSection('content'); ?>
 
-@section('content')
+<?php echo $__env->make('Includes.Panel.modals', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-@include('Includes.Panel.modals')
-
-@include('Includes.Panel.moviesmenu')
+<?php echo $__env->make('Includes.Panel.moviesmenu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 
 
@@ -12,7 +10,7 @@
 <div class="card">
     <div class="card-body">
         <div class="card-title">
-            <h5 class="text-center">مدیریت فایل ها</h5>
+            <h5 class="text-center">مدیریت آهنگ ها</h5>
             <hr>
         </div>
 
@@ -24,7 +22,7 @@
                     <th> نام </th>
                     <th>بازدید ها</th>
                     <th>لایک ها</th>
-                    <th>دسته بندی ها</th>
+                   
                     <th>زبان</th>
                     <th></th>
 
@@ -33,28 +31,24 @@
             </thead>
 
             <tbody>
-                @foreach($movies as $key=>$post)
+                <?php $__currentLoopData = $music; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                    
-                    <td>{{$key+1}}</td>
+                    <td><?php echo e($key+1); ?></td>
                     <td>
-                        <a href="#" class="text-primary">{{$post->name}}</a>
+                        <a href="#" class="text-primary"><?php echo e($post->name); ?></a>
                     </td>
-                    <td>{{$post->views}}</td>
-                    <td class="text-success">{{$post->votes()->count()}}</td>
+                    <td><?php echo e($post->views); ?></td>
+                    <td class="text-success"><?php echo e($post->votes()->count()); ?></td>
+                   
                     <td>
-                        @foreach ($post->categories as $category)
-                        {{$category->name}} ,
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($post->languages as $language)
-                        {{$language->name}} -
-                        @endforeach
+                        <?php $__currentLoopData = $post->languages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $language): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php echo e($language->name); ?> -
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </td>
                     <td>
-                        <a href="{{route('Panel.EditMovie',$post)}}" class="btn btn-sm btn-info">ویرایش</a>
-                        <a href="#" data-id="{{$post->id}}" title="حذف " data-toggle="modal" data-target="#deletePost"
+                        <a href="<?php echo e(route('Panel.EditMovie',$post)); ?>" class="btn btn-sm btn-info">ویرایش</a>
+                        <a href="#" data-id="<?php echo e($post->id); ?>" title="حذف " data-toggle="modal" data-target="#deletePost"
                             class="btn btn-sm btn-danger   m-2">
 
                             <i class="fa fa-trash"></i>
@@ -62,7 +56,7 @@
                         </a>
 
                     </td>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
             </tbody>
@@ -74,12 +68,12 @@
 
 </div>
 
-@endsection
-@section('css')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('css'); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('js')
+<?php $__env->startSection('js'); ?>
 <script>
     $('table input[type="checkbox"]').change(function(){
             if( $(this).is(':checked')){
@@ -129,8 +123,8 @@
     //  $('.deleteposts').click(function(e){
     //         e.preventDefault()
 
-    //         data = { array:array, _method: 'delete',_token: "{{ csrf_token() }}" };
-    //         url='{{route('Panel.DeletePost')}}';
+    //         data = { array:array, _method: 'delete',_token: "<?php echo e(csrf_token()); ?>" };
+    //         url='<?php echo e(route('Panel.DeletePost')); ?>';
     //         request = $.post(url, data);
     //         request.done(function(res){
     //         location.reload()
@@ -138,4 +132,5 @@
     // })
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Layout.Panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\radio\resources\views/Panel/Music/List.blade.php ENDPATH**/ ?>
