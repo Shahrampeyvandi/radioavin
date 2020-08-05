@@ -18,7 +18,7 @@ class CreateFilesTable extends Migration
             $table->unsignedBigInteger('fileble_id');
             $table->string('fileble_type');
             $table->string('url');
-            $table->string('quality_id')->nullable();
+            $table->string('quality')->nullable();
             $table->enum('type',['audio','video']);
             $table->string('description')->nullable();
             $table->timestamps();

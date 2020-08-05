@@ -18,6 +18,12 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
     Route::get('music/add', 'Panel\MusicController@Add')->name('Panel.AddMusic');
     Route::post('music/add', 'Panel\MusicController@Save')->name('Panel.AddMusic');
     Route::put('music/add', 'Panel\MusicController@EditPost')->name('Panel.AddMusic');
+
+    Route::get('video/add', 'Panel\VideoController@Add')->name('Panel.AddVideo');
+    Route::post('video/add', 'Panel\VideoController@Save')->name('Panel.AddVideo');
+    Route::put('video/add', 'Panel\VideoController@EditPost')->name('Panel.AddVideo');
+
+
     Route::get('users', 'Panel\UserController@List')->name('Panel.UserList');
     Route::post('user/add', 'Panel\UserController@Add')->name('Panel.AddUser');
     Route::get('series/add', 'Panel\SeriesController@Add')->name('Panel.AddSerie');
@@ -26,7 +32,7 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
 
     Route::delete('user/delete', 'Panel\UserController@Delete')->name('Panel.DeleteUser');
     Route::get('music/list', 'Panel\MusicController@MusicList')->name('Panel.MusicList');
-    Route::get('series/list', 'Panel\SeriesController@SeriesList')->name('Panel.SeriesList');
+    Route::get('video/list', 'Panel\VideoController@VideoList')->name('Panel.VideoList');
 
     Route::get('series/{serie}/season/add', 'Panel\SeriesController@AddSeason')->name('Panel.AddSeason');
     Route::post('series/{serie}/season/add', 'Panel\SeriesController@InsertSeason')->name('Panel.AddSeason');
@@ -52,8 +58,8 @@ Route::group(['middleware' => ['admin'],'prefix'=>'panel'], function () {
     Route::get('music/{post}', 'Panel\MusicController@Edit')->name('Panel.EditMusic');
     Route::post('music/{post}', 'Panel\MusicController@EditMusic')->name('Panel.EditMusic');
 
-    Route::get('serie/{post}', 'Panel\SeriesController@Edit')->name('Panel.EditSerie');
-    Route::post('serie/{post}', 'Panel\SeriesController@EditSerie')->name('Panel.EditSerie');
+    Route::get('video/{post}', 'Panel\VideoController@Edit')->name('Panel.EditVideo');
+    Route::post('video/{post}', 'Panel\VideoController@EditVideo')->name('Panel.EditVideo');
 
 
     Route::post('actor/insert', 'Panel\ActorsController@Insert')->name('Panel.Actor.Insert');

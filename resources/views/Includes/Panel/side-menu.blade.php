@@ -4,15 +4,15 @@
         <ul>
             <li class="side-menu-divider">فهرست</li>
             <li><a href="{{route('BaseUrl')}}"><i class="fas fa-home"></i> <span class="pr-4">داشبورد</span> </a></li>
-            {{-- <li><a href="{{route('Panel.UserList')}}"><i class="fas fa-users"></i> <span class="pr-4">کاربران</span>
+             <li><a href="{{route('Panel.UserList')}}"><i class="fas fa-users"></i> <span class="pr-4">کاربران</span>
                 </a>
-            </li> --}}
+            </li> 
              <li><a href="{{route('Panel.MusicList')}}"><i class="fas fa-film"></i> <span class="pr-4">موزیک </span> </a>
 
             </li>
-           <!-- <li><a href="{{route('Panel.SeriesList')}}"><i class="fas fa-video"></i> <span class="pr-4">سریال</span> </a>
+          <li><a href="{{route('Panel.VideoList')}}"><i class="fas fa-video"></i> <span class="pr-4">ویدیو</span> </a>
             </li>
-            <li><a href="#"><i class="fas fa-blog"></i> <span class="pr-4">وبلاگ</span> </a>
+            <!--  <li><a href="#"><i class="fas fa-blog"></i> <span class="pr-4">وبلاگ</span> </a>
                 <ul>
                     <li><a href="{{route('Panel.AddBlog')}}">افزودن</a></li>
                     <li><a href="{{route('Panel.BlogList')}}">لیست</a></li>

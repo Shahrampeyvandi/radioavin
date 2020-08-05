@@ -98,4 +98,29 @@
                             </div>
                         </div>
                         {{-- end arrangements --}}
+
+                        {{-- directors --}}
+                      <h6 class="">Directors: </h6>
+                        <div class="cat row">
+                            <div class="col-md-12">
+                                <div class="d-flex">
+                                    <input type="text" class="form-control mb-2" name="" id="director" placeholder="name">
+                                </div>
+                                <a href="#" class="btn btn-sm btn-primary mb-3"
+                                    onclick="addDirector(event)">add</a>
+                                <div class="director-wrapper  card pr-2"
+                                    style=" min-height:50px;max-height: 200px;overflow-y: scroll;">
+                                    @foreach (\App\Director::all() as $key=>$item)
+                                    <div class="custom-control custom-checkbox custom-control-inline ">
+                                        <input type="checkbox" id="director-{{$key+1}}" name="directors[]"
+                                            value="{{$item->id}}" class="custom-control-input sarrangement" @if (isset($post))
+                                            {{$post->directors->pluck('id')->contains($item->id) ? 'checked' : ''}}
+                                            @endif>
+                                        <label class="custom-control-label" for="director-{{$key+1}}">{{$item->name}}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        {{-- end directors --}}
                     </div>

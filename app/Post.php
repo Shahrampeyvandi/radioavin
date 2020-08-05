@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     protected $guarded = ['id'];
-    protected $with = ['categories','images','languages'];
+    protected $with = ['categories','images'];
     protected $casts = [
         'awards' => 'array',
     ];
@@ -50,5 +50,9 @@ class Post extends Model
         return $this->belongsToMany(Arrangement::class, 'post_arrangement', 'post_id', 'arrangement_id');
     }
 
+    public function directors()
+    {
+        return $this->belongsToMany(Director::class, 'post_director', 'post_id', 'director_id');
+    }
     
 }

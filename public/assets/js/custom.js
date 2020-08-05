@@ -454,6 +454,23 @@ function addArrangement(event) {
     }
 }
 
+function addDirector(event) {
+    event.preventDefault();
+    let val = $(event.target).prev().find("#director").val();
+    if (val !== "") {
+        let id = Math.random();
+        let wrapper = $(".director-wrapper");
+        wrapper.append(`
+         <div class="custom-control custom-checkbox custom-control-inline">
+                                <input type="checkbox" id="director-${id}" name="directors[]"
+                                 value="${val}"
+                                    class="custom-control-input" checked>
+                                <label class="custom-control-label" for="arrangement-${id}">${val}</label>
+                            </div>
+         `);
+    }
+}
+
 function addToInput(event) {
     event.preventDefault();
     let text = $(event.target).text();
